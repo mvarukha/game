@@ -1,14 +1,5 @@
 import random
 
-text = """In the world of Aether, where magic is intertwined with reality, an ancient artifact known as the Heart of the World has been shattered into three shards. This has unbalanced magical powers and created chaos. Three heroes with unique magical abilities are chosen by fate to find the shards and restore the Heart of the World.
-
-Aidan: A master of elemental magic, able to control fire, water and earth. He seeks to restore balance to the world.
-Lyra: A skilled healer and expert in the arcane arts, wielding the magic of light. Her goal is to heal Aether's wounds.
-Regan: A mysterious wanderer who wields the magic of shadow and illusion. His motives remain hidden.
-
-Their journey lies through dangerous lands full of mystery and challenges. Aether's fate depends on their success. Can any of them collect all three shards and save Aether?"""
-
-print(text)
 ACTIVE_HERO = "Эйдан"
 
 heroes = {
