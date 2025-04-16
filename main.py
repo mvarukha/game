@@ -1,5 +1,5 @@
 import random
-import random
+
 text = """In the world of Aether, where magic is intertwined with reality, an ancient artifact known as the Heart of the World has been shattered into three shards. This has unbalanced magical powers and created chaos. Three heroes with unique magical abilities are chosen by fate to find the shards and restore the Heart of the World.
 
 Aidan: A master of elemental magic, able to control fire, water and earth. He seeks to restore balance to the world.
@@ -31,6 +31,7 @@ resources = {
 # Количество попыток
 remaining_moves = 6
 
+
 # Функции игры
 def print_status():
     print("\n--- Текущее состояние ---")
@@ -38,6 +39,7 @@ def print_status():
     for hero, stats in heroes.items():
         print(f"{hero}: Здоровье - {stats['здоровье']}, Магия - {stats['магия']}, Осколки - {stats['осколки']}")
     print(f"Ресурсы: {resources}")
+
 
 def choose_path(hero_name):
     print(f"\n{hero_name}, выберите путь:")
@@ -50,8 +52,10 @@ def choose_path(hero_name):
             return choice
         print("Неверный выбор. Введите 1, 2 или 3")
 
+
 def test_wisdom():
-    print("\nДревние стражи задают загадку:")
+    print("Древние стражи заброшенного города - Наим и Джон  задают загадку: Что имеет города, горы и реки, но не имеет домов, деревьев и воды?")
+    print("Древние стражи задают загадку:")
     print("Что имеет города, горы и реки, но не имеет домов, деревьев и воды?")
     answer = input("Ваш ответ: ").lower()
     if answer == "карта":
@@ -61,13 +65,15 @@ def test_wisdom():
     heroes[ACTIVE_HERO]["здоровье"] -= 20
     return False
 
+
 def test_tragedy():
+    print('Вы забрались на гору и потревожили ее духа-Буфетию,из-за чего началось извержение вулкана.Ваши действия:')
     print('\nИзвержение вулкана! Ваши действия:')
     print('1. Бежать')
     print('2. Использовать магию')
     print('3. Застыть в оцепенении')
     choice = input("> ")
-    
+
     if choice == "1":
         heroes[ACTIVE_HERO]["здоровье"] -= 30
         print('Спаслись, но получили ранения. Получаете осколок.')
@@ -87,23 +93,28 @@ def test_tragedy():
     print("Неверный выбор!")
     return False
 
+
 def test_forest_fairy():
+    print('Зайдя в древний лес матанализа,вы встретили фею-хранительницу Шильцинию.'
+          '\nОна рассказала ,что на математическое древо-жизни напали киберы-разбойники и повредили его'
+          '\nВаша задача найти три ингредиента для зелья,чтобы изличить древо.Для их получения необходимо решить два предела')
     print('\nФея просит решить 3 предела:')
     correct = 0
-    
+
     if int(input('lim((1 - cosx)/x) при x→0: ')) == 0:
         correct += 1
     if int(input('lim((arcsinx)/x) при x→0: ')) == 1:
         correct += 1
     if int(input('lim((ln(1 + x))/x) при x→0: ')) == 1:
         correct += 1
-    
+
     if correct == 3:
         print('Все верно! Получаете осколок!')
         return True
-    
+
     print(f'Правильных ответов: {correct}/3. Фея разочарована...')
     return False
+
 
 def trade_with_nomads():
     print("\nВы встретили кочевников. Ваши действия:")
@@ -112,11 +123,11 @@ def trade_with_nomads():
     print("3. Уйти")
 
     choice = input("> ")
-    
+
     if heroes[ACTIVE_HERO]["здоровье"] <= 0:
         print(f"{ACTIVE_HERO} не может торговать - персонаж мёртв!")
         return
-    
+
     if choice == "1" and resources["золото"] >= 10:
         resources["зелья"] += 1
         resources["золото"] -= 10
@@ -127,9 +138,10 @@ def trade_with_nomads():
     else:
         print("Ушли.")
 
+
 def combat(enemy_name, enemy_health):
     print(f"\nНа вас напал {enemy_name} ({enemy_health} HP)!")
-    
+
     while heroes[ACTIVE_HERO]["здоровье"] > 0 and enemy_health > 0:
         print(f"\n{ACTIVE_HERO}: Здоровье {heroes[ACTIVE_HERO]['здоровье']}")
         print(f"{enemy_name}: Здоровье {enemy_health}")
@@ -137,7 +149,7 @@ def combat(enemy_name, enemy_health):
         print("2. Использовать зелье (+20 HP)")
 
         action = input("> ")
-        
+
         if action == "1":
             damage = random.randint(10, 20)
             enemy_health -= damage
@@ -157,32 +169,35 @@ def combat(enemy_name, enemy_health):
     if heroes[ACTIVE_HERO]["здоровье"] > 0:
         print(f"Победили {enemy_name}!")
         return True
-    
+
     print("Проиграли...")
     return False
 
+
 def random_event():
     events = [
-        ("Магический шторм", lambda: [print("Потеряли 5 золота!"), resources.update({"золото": max(0, resources["золото"] - 5)})]),
+        ("Магический шторм",
+         lambda: [print("Потеряли 5 золота!"), resources.update({"золото": max(0, resources["золото"] - 5)})]),
         ("Нашли клад", lambda: [print("+10 золота!"), resources.update({"золото": resources["золото"] + 10})]),
         ("Нападение гоблинов", lambda: combat("Гоблин", 50)),
         ("Встреча с кочевниками", trade_with_nomads)
     ]
-    
+
     if heroes[ACTIVE_HERO]["здоровье"] <= 0:
         print(f"{ACTIVE_HERO} не может участвовать в событиях - персонаж мёртв!")
         return
-    
+
     event = random.choice(events)
     print(f"\nСобытие: {event[0]}")
     event[1]()
 
+
 def main_game_loop():
     print("=== Игра 'Сердце Аэтера' ===")
     print("Соберите 3 осколка, чтобы спасти мир!")
-    
+
     global ACTIVE_HERO, remaining_moves
-    
+
     while remaining_moves > 0:
         # Проверяем условия победы
         if any(hero["осколки"] >= 3 for hero in heroes.values()):
@@ -190,32 +205,32 @@ def main_game_loop():
             print("\n=== Игра окончена ===")
             print(f"ПОБЕДА! {winner} собрал 3 осколка!")
             return
-        
+
         # Проверяем есть ли живые герои
         if all(hero["здоровье"] <= 0 for hero in heroes.values()):
             print("\n=== Игра окончена ===")
             print("Поражение... Все герои погибли.")
             return
-        
+
         print_status()
-        
+
         for hero_name in hero_list:
             ACTIVE_HERO = hero_name
-            
+
             if heroes[ACTIVE_HERO]["здоровье"] <= 0:
                 print(f"\n{ACTIVE_HERO} не может действовать!")
                 continue
-                
+
             print(f"\n--- Ход {ACTIVE_HERO} ---")
-            
+
             # Герой выбирает свой путь
             path = choose_path(ACTIVE_HERO)
-            
+
             # Проверяем, проходил ли герой эту локацию и получал ли осколок
             if path in completed_locations[ACTIVE_HERO]:
                 print(f"{ACTIVE_HERO} уже проходил это испытание и получал осколок. Пропускаем.")
                 continue
-                
+
             if path == "1":
                 if test_forest_fairy():
                     heroes[ACTIVE_HERO]["осколки"] += 1
@@ -228,20 +243,21 @@ def main_game_loop():
                 if test_tragedy():
                     heroes[ACTIVE_HERO]["осколки"] += 1
                     completed_locations[ACTIVE_HERO].add(path)
-            
+
             # Проверяем победу после каждого действия
             if heroes[ACTIVE_HERO]["осколки"] >= 3:
                 print("\n=== Игра окончена ===")
                 print(f"ПОБЕДА! {ACTIVE_HERO} собрал 3 осколка!")
                 return
-            
+
             random_event()
-        
+
         remaining_moves -= 1
         print("\n=== Конец раунда ===")
 
     print("\n=== Игра окончена ===")
     print("Поражение... Время вышло.")
+
 
 # Запуск игры
 if __name__ == "__main__":
@@ -272,6 +288,7 @@ resources = {
 # Number of attempts remaining
 remaining_moves = 6
 
+
 # Game functions
 def print_status():
     print("\n--- Current Status ---")
@@ -279,6 +296,7 @@ def print_status():
     for hero, stats in heroes.items():
         print(f"{hero}: Health - {stats['health']}, Magic - {stats['magic']}, Shards - {stats['shards']}")
     print(f"Resources: {resources}")
+
 
 def choose_path(hero_name):
     print(f"\n{hero_name}, choose your path:")
@@ -291,6 +309,7 @@ def choose_path(hero_name):
             return choice
         print("Invalid choice. Enter 1, 2 or 3")
 
+
 def test_wisdom():
     print("\nAncient guardians pose a riddle:")
     print("What has cities, mountains and rivers, but no houses, trees or water?")
@@ -302,13 +321,14 @@ def test_wisdom():
     heroes[ACTIVE_HERO]["health"] -= 20
     return False
 
+
 def test_tragedy():
     print('\nVolcanic eruption! Your actions:')
     print('1. Run away')
     print('2. Use magic')
     print('3. Freeze in fear')
     choice = input("> ")
-    
+
     if choice == "1":
         heroes[ACTIVE_HERO]["health"] -= 30
         print('Escaped but got injured. Receive a shard.')
@@ -328,23 +348,25 @@ def test_tragedy():
     print("Invalid choice!")
     return False
 
+
 def test_forest_fairy():
     print('\nThe fairy asks you to solve 3 limits:')
     correct = 0
-    
+
     if int(input('lim((1 - cosx)/x) as x→0: ')) == 0:
         correct += 1
     if int(input('lim((arcsinx)/x) as x→0: ')) == 1:
         correct += 1
     if int(input('lim((ln(1 + x))/x) as x→0: ')) == 1:
         correct += 1
-    
+
     if correct == 3:
         print('All correct! Receive a shard!')
         return True
-    
+
     print(f'Correct answers: {correct}/3. The fairy is disappointed...')
     return False
+
 
 def trade_with_nomads():
     print("\nYou encountered nomads. Your actions:")
@@ -353,11 +375,11 @@ def trade_with_nomads():
     print("3. Leave")
 
     choice = input("> ")
-    
+
     if heroes[ACTIVE_HERO]["health"] <= 0:
         print(f"{ACTIVE_HERO} can't trade - character is dead!")
         return
-    
+
     if choice == "1" and resources["gold"] >= 10:
         resources["potions"] += 1
         resources["gold"] -= 10
@@ -368,9 +390,10 @@ def trade_with_nomads():
     else:
         print("Left.")
 
+
 def combat(enemy_name, enemy_health):
     print(f"\nYou were attacked by {enemy_name} ({enemy_health} HP)!")
-    
+
     while heroes[ACTIVE_HERO]["health"] > 0 and enemy_health > 0:
         print(f"\n{ACTIVE_HERO}: Health {heroes[ACTIVE_HERO]['health']}")
         print(f"{enemy_name}: Health {enemy_health}")
@@ -378,7 +401,7 @@ def combat(enemy_name, enemy_health):
         print("2. Use potion (+20 HP)")
 
         action = input("> ")
-        
+
         if action == "1":
             damage = random.randint(10, 20)
             enemy_health -= damage
@@ -398,9 +421,10 @@ def combat(enemy_name, enemy_health):
     if heroes[ACTIVE_HERO]["health"] > 0:
         print(f"Defeated {enemy_name}!")
         return True
-    
+
     print("Defeated...")
     return False
+
 
 def random_event():
     events = [
@@ -409,21 +433,22 @@ def random_event():
         ("Goblin attack", lambda: combat("Goblin", 50)),
         ("Nomad encounter", trade_with_nomads)
     ]
-    
+
     if heroes[ACTIVE_HERO]["health"] <= 0:
         print(f"{ACTIVE_HERO} can't participate in events - character is dead!")
         return
-    
+
     event = random.choice(events)
     print(f"\nEvent: {event[0]}")
     event[1]()
 
+
 def main_game_loop():
     print("=== Game 'Heart of Aether' ===")
     print("Collect 3 shards to save the world!")
-    
+
     global ACTIVE_HERO, remaining_moves
-    
+
     while remaining_moves > 0:
         # Check win conditions
         if any(hero["shards"] >= 3 for hero in heroes.values()):
@@ -431,32 +456,32 @@ def main_game_loop():
             print("\n=== Game Over ===")
             print(f"VICTORY! {winner} collected 3 shards!")
             return
-        
+
         # Check if any heroes are alive
         if all(hero["health"] <= 0 for hero in heroes.values()):
             print("\n=== Game Over ===")
             print("Defeat... All heroes have perished.")
             return
-        
+
         print_status()
-        
+
         for hero_name in hero_list:
             ACTIVE_HERO = hero_name
-            
+
             if heroes[ACTIVE_HERO]["health"] <= 0:
                 print(f"\n{ACTIVE_HERO} can't act!")
                 continue
-                
+
             print(f"\n--- {ACTIVE_HERO}'s turn ---")
-            
+
             # Hero chooses their path
             path = choose_path(ACTIVE_HERO)
-            
+
             # Check if hero already completed this location and got a shard
             if path in completed_locations[ACTIVE_HERO]:
                 print(f"{ACTIVE_HERO} already completed this trial and received a shard. Skipping.")
                 continue
-                
+
             if path == "1":
                 if test_forest_fairy():
                     heroes[ACTIVE_HERO]["shards"] += 1
@@ -469,20 +494,21 @@ def main_game_loop():
                 if test_tragedy():
                     heroes[ACTIVE_HERO]["shards"] += 1
                     completed_locations[ACTIVE_HERO].add(path)
-            
+
             # Check for victory after each action
             if heroes[ACTIVE_HERO]["shards"] >= 3:
                 print("\n=== Game Over ===")
                 print(f"VICTORY! {ACTIVE_HERO} collected 3 shards!")
                 return
-            
+
             random_event()
-        
+
         remaining_moves -= 1
         print("\n=== End of round ===")
 
     print("\n=== Game Over ===")
     print("Defeat... Time's up.")
+
 
 # Start the game
 if __name__ == "__main__":
